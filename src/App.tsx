@@ -1,10 +1,13 @@
 //Link do GraphCMS
 //https://app.graphcms.com/clone/1d7442bf5a434389904c44d54a041b01?name=Ignite%20Lab%2002
 
-import { gql, useQuery } from "@apollo/client"
+//Context Provider
+import { ApolloProvider, gql, useQuery } from "@apollo/client"
 import { useEffect } from "react"
+import { BrowserRouter } from "react-router-dom"
 import { client } from "./lib/apollo"
 import { Event } from "./pages/Event"
+import { Router } from "./Router"
 
 /*
 //GQL Permite escrever query do GrapCms
@@ -48,7 +51,11 @@ interface Lesson {
 function App() {
   return (
     <div>
-      <Event />
+      <ApolloProvider client={client}>
+        <BrowserRouter>
+          <Router />
+        </BrowserRouter>
+      </ApolloProvider>
     </div>
   )
 }

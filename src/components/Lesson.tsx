@@ -6,6 +6,7 @@ import {isPast, format} from 'date-fns'
 
 //Conversão do idioma para o Português do Brasil
 import ptBR from 'date-fns/locale/pt-BR'
+import { Link } from 'react-router-dom';
 
 //Adaptação do Ao Vivo e Aula gravada
 interface LessonProps {
@@ -26,10 +27,10 @@ export function Lesson(props: LessonProps) {
     })
 
     return (
-        <a href="#">
+        <Link to={`/event/lesson/${props.slug}`} className='group'>
             <span className="text-gray-300">{availableDateFormatted}</span>
 
-            <div className="rounded border border-gray-500 p-4 mt-2">
+            <div className="rounded border border-gray-500 p-4 mt-2 group-hover:border-green-500">
                 <header className="flex items-center justify-between">
                     {isLessonAvailable ? (
                         <span
@@ -56,6 +57,6 @@ export function Lesson(props: LessonProps) {
 
                 <strong className="text-gray-200 mt-5 block">{props.title}</strong>
             </div>
-        </a>
+        </Link>
     )
 }
