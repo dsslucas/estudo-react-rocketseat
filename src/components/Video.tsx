@@ -4,8 +4,12 @@ import { CaretRight, DiscordLogo, FileArrowDown, Lightning } from "phosphor-reac
 //CSS para o vídeo
 import '@vime/core/themes/default.css'
 import { gql, useQuery } from "@apollo/client";
+import { useGetLessonBySlugQuery } from "../graphql/generated";
 
 //Query do GraphCMS
+
+/*
+PRIMEIRA FORMA DE CONEXÃO SEM O GRAPHQL
 const GET_LESSON_BY_SLUG_QUERY = gql`
     query GetLessonBySlug($slug: String = "") {
         lesson(where: {slug: $slug}) {
@@ -20,7 +24,6 @@ const GET_LESSON_BY_SLUG_QUERY = gql`
         }
     }
 `
-
 interface GetLessonBySlugResponse {
     lesson: {
         title: string;
@@ -34,19 +37,26 @@ interface GetLessonBySlugResponse {
     }
 }
 
+*/
+
 interface VideoProps {
     lessonSlug: string
 }
 
 export function Video(props: VideoProps) {
     //Consulta, que vem do Apollo Client
-    const { data } = useQuery<GetLessonBySlugResponse>(GET_LESSON_BY_SLUG_QUERY, {
+
+    //PRIMEIRA FORMA
+    //const { data } = useQuery<GetLessonBySlugResponse>(GET_LESSON_BY_SLUG_QUERY, {
+
+    //SEGUNDA FORMA
+    const { data } = useGetLessonBySlugQuery({
         //Por envolver a variável Slug (no GraphCMS) isso é necessário
         variables: { slug: props.lessonSlug }
     })
 
     //Caso não esteja com os dados em tela
-    if (!data) {
+    if (!data || !data.lesson) {
         return (
             <div className="flex-1 align-center justify-center">
                 <p>Carregando...</p>
@@ -74,18 +84,20 @@ export function Video(props: VideoProps) {
 
                         <p className="mt-4 text-gray-200 leading-relaxed">{data.lesson.description}</p>
 
-                        <div className="flex items-center gap-5">
-                            <img
-                                src={data.lesson.teacher.avatarURL}
-                                alt=""
-                                className="h-20 w-20 rounded-full border-2 border-blue-500"
-                            />
+                        {data.lesson.teacher && (
+                            <div className="flex items-center gap-5">
+                                <img
+                                    src={data.lesson.teacher.avatarURL}
+                                    alt=""
+                                    className="h-20 w-20 rounded-full border-2 border-blue-500"
+                                />
 
-                            <div>
-                                <strong className="font-bold text-2xl block">{data.lesson.teacher.name}</strong>
-                                <span className="text-gray=200 text-sm block">{data.lesson.teacher.bio}</span>
+                                <div>
+                                    <strong className="font-bold text-2xl block">{data.lesson.teacher.name}</strong>
+                                    <span className="text-gray=200 text-sm block">{data.lesson.teacher.bio}</span>
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
 
                     <div className="flex py-5 lg:flex flex-col gap-5">

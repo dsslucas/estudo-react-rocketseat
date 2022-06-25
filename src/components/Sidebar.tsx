@@ -1,7 +1,11 @@
 import { gql, useQuery } from "@apollo/client";
+import { useGetLessonsQuery } from "../graphql/generated";
 import { Lesson } from "./Lesson";
 
 //DADOS DO GRAPHCMS
+
+/*
+PRIMEIRA FORMA DE CONEXÃO, SEM GRAPHQL
 const GET_LESSONS_QUERY = gql`
     query {
         lessons(orderBy: availableAt_ASC, stage: PUBLISHED) {
@@ -14,6 +18,7 @@ const GET_LESSONS_QUERY = gql`
     }
 `
 
+//TypeScript. Necessário para tipar o que vem do GraphCMS
 interface GetLessonsQueryResponse {
     lessons: {
         id: string
@@ -23,6 +28,7 @@ interface GetLessonsQueryResponse {
         lessonType: 'live' | 'class'
     }[]
 }
+*/
 
 interface SidebarProps {
     visible: string
@@ -30,7 +36,11 @@ interface SidebarProps {
 
 export function Sidebar(props: SidebarProps) {
 
-    const { data } = useQuery<GetLessonsQueryResponse>(GET_LESSONS_QUERY)
+    //PRIMEIRA FORMA
+    //const { data } = useQuery<GetLessonsQueryResponse>(GET_LESSONS_QUERY)
+
+    //SEGUNDA FORMA
+    const {data} = useGetLessonsQuery()
 
     return (
         <aside
